@@ -6,6 +6,9 @@ step-2:
 DockerFile:
 
 step-3:
+docker build -t myjenkins-blueocean:2.492.1-1 .
+
+step-4:
 docker run --name jenkins-blueocean --restart=on-failure --detach \
   --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
