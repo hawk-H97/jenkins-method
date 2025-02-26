@@ -9,7 +9,7 @@ step-2:
 DockerFile:
 
 step-3:
-docker build -t myjenkins-blueocean:2.492.1-1 .
+docker build -t devsecops-pipeline:1.0 .
 
 step-4:
 
@@ -19,4 +19,4 @@ docker run --name jenkins-blueocean --restart=on-failure --detach \
   --publish 8080:8080 --publish 50000:50000 \
   --volume $HOME/jenkins-data:/var/jenkins_home \
   --volume $HOME/jenkins-docker-certs:/certs/client:ro \
-  OUR IMAGE
+   devsecops-pipeline:1.0
