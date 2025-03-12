@@ -2,9 +2,10 @@ pipeline {
     agent any
     tools {
         jdk 'jdk17'
+        nodejs 'node23'
     }
     environment {
-        SCANNER_HOME = tool 'sonar-scanner'  // Correctly set SCANNER_HOME
+        SCANNER_HOME = tool 'sonar-scanner'
     }
     stages {
         stage('Cleanup Workspace') {
@@ -14,22 +15,29 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/hawk-H97/jenkins-method'
+                git branch: 'local', credentialsId: 'github', url: 'https://github.com/hawk-H97/jenkins-method'
             }
         }
-        stage('SonarQube Analysis') {
+        stage('Install Dependencies') {
             steps {
-                script {
-                    def scannerHome = tool name: 'sonar-scanner'  // Ensure 'sonar-scanner' is configured in Jenkins Global Tool Configuration
-                    withSonarQubeEnv('sonarqube-custom') {  // Ensure 'sonarqube-custom' is configured in Jenkins
-                        sh """
-                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=barber \
-                        -Dsonar.projectKey=barber
-                        """
-                    }
+                sh "npm -v"
+            }
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonarqube-custom') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=barber \
+                    -Dsonar.projectKey=barber '''
                 }
             }
         }
+        stage("")
     }
     post {
         always {
