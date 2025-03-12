@@ -29,7 +29,7 @@ pipeline {
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
-        stage("Sonarqube Analysis "){
+        stage("Sonarqube Analysis ") {
             steps{
                 withSonarQubeEnv('sonarqube-custom') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=barber \
@@ -37,7 +37,16 @@ pipeline {
                 }
             }
         }
-        stage("")
+        stage("Build Docker image") {
+            steps {
+                sh 'docker build -t barber:1.0 .'
+            }
+        }
+        stage('TRIVY Scan') {
+            steps {
+                sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL barber:1.0"
+            }
+        }
     }
     post {
         always {
