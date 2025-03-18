@@ -3,6 +3,7 @@ pipeline {
     tools {
         jdk 'jdk17'
         nodejs 'Node23'
+        Dependency-Check 'DP-Check'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
@@ -25,7 +26,8 @@ pipeline {
         }
         stage('OWASP FS SCAN') {
             steps {
-                dependencyCheck additionalArguments: '--scan ./ --format XML --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheck additionalArguments: '--scan ./ --format XML --disableYarnAudit --disableNodeAudit', 
+                        odcInstallation: 'DP-Check' // Ensure this matches the Jenkins tool name
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
