@@ -3,7 +3,6 @@ pipeline {
     tools {
         jdk 'jdk17'
         nodejs 'Node23'
-        Dependency-Check 'DP-Check'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
