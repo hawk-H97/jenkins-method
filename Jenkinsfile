@@ -33,7 +33,7 @@ pipeline {
         }
         stage("Build Docker image") {
             steps {
-                sh 'docker build -t barber:1.0 .'
+                sh 'sudo docker build -t barber:1.0 .'
             }
         }
         stage('TRIVY Scan') {
