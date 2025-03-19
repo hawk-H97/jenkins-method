@@ -42,9 +42,9 @@ pipeline {
         }
         stage('TRIVY Scan') {
             steps {
-                sh "trivy image barber:1.0"
-                sh "trivy image --scanners license barber:1.0"
-                sh "trivy image --scanners misconfig barber:1.0"
+                sh "trivy image --input barber:1.0"
+                sh "trivy image --scanners license --input barber:1.0"
+                sh "trivy image --scanners misconfig --input barber:1.0"
             }
         }
     }
