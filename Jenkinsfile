@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent{
+        node {
+            label 'test_node'
+        }
+    }
     tools {
         jdk 'jdk17'
         nodejs 'Node23'
@@ -34,7 +38,7 @@ pipeline {
         stage("Build Docker image") {
             steps {
                 script{ 
-                   (toolName: 'latest'){
+                   {
                        sh 'docker build -t barber:1.0 .'
                    }
                 }
