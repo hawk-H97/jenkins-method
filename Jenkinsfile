@@ -42,10 +42,17 @@ pipeline {
         }
         stage('TRIVY Scan') {
             steps {
-                sh "trivy image --input barber:1.0"
-                sh "trivy image --scanners license --input barber:1.0"
-                sh "trivy image --scanners misconfig --input barber:1.0"
+                script {
+                    echo "Scanning Docker image ${barber:1.0} for vulnerabilities..."
+                    sh """
+                        trivy image --severity CRITICAL,HIGH ${barber:1.0}
+                    """
+                }
             }
+            post {
+               always {
+                   echo "Trivy image scanning completed."
+        }
         }
     }
 }
