@@ -34,7 +34,7 @@ pipeline {
         stage("Build Docker image") {
             steps {
                 script{ 
-                   withDockerRegistry(toolName: 'latest'){
+                   (toolName: 'latest'){
                        sh 'docker build -t barber:1.0 .'
                    }
                 }
