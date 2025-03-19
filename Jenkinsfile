@@ -3,7 +3,6 @@ pipeline {
     tools {
         jdk 'jdk17'
         nodejs 'Node23'
-        docker 'latest'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
@@ -34,6 +33,7 @@ pipeline {
         }
         stage("Build Docker image") {
             steps {
+                withDockerRegistry(credentialsId: 'docker-latest', toolName: 'latest')
                 sh 'docker build -t barber:1.0 .'
             }
         }
