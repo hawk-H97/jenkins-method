@@ -33,8 +33,11 @@ pipeline {
         }
         stage("Build Docker image") {
             steps {
-                withDockerRegistry(credentialsId: 'docker-latest', toolName: 'latest')
-                sh 'docker build -t barber:1.0 .'
+                script{ 
+                   withDockerRegistry(credentialsId: 'docker-latest', toolName: 'latest'){
+                       sh 'docker build -t barber:1.0 .'
+                   }
+                }
             }
         }
         stage('TRIVY Scan') {
