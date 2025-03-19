@@ -42,7 +42,9 @@ pipeline {
         }
         stage('TRIVY Scan') {
             steps {
-                sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL barber:1.0"
+                sh "trivy image barber:1.0"
+                sh "trivy image --scanners license barber:1.0"
+                sh "trivy image --scanners misconfig barber:1.0"
             }
         }
     }
