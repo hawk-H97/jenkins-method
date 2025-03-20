@@ -44,6 +44,27 @@ pipeline {
             }
         }
 
+        stage('Verify SonarQube Results') {
+            steps {
+                script {
+                    echo "Pipeline paused for manual verification of SonarQube results."
+                    echo "Check SonarQube dashboard at: http://65.0.74.158:9000/dashboard?id=barber"
+
+                    def userChoice = input message: 'SonarQube analysis complete. Review vulnerabilities and approve to continue.',
+                                    ok: 'Approve',
+                                    parameters: [
+                                        choice(name: 'ACTION', choices: ['Continue', 'Abort'], description: 'Select an action')
+                                    ]
+
+                    if (userChoice == 'Abort') {
+                        error "Pipeline aborted by user after SonarQube review."
+                    } else {
+                        echo "Pipeline approved. Continuing..."
+                    }
+                }
+            }
+        }
+
         stage('TRIVY FS Scan') {
             steps {
                     sh "trivy fs .>trivyfs.txt"
