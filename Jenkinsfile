@@ -44,26 +44,33 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('TRIVY FS Scan') {
             steps {
-                sh 'docker build -t barber:1.0 .'
+                    sh "trivy fs .>trivyfs.txt"
+                  }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+               script{
+                withDockerRegistry(credentialsId:'docker',toolName: 'docker'){
+                    sh "docker build -t barber1.0 ."
+                    sh "docker tag barber1.0 pragadesh007/barber1.0:latest"
+                    sh "dokcer push pragadesh007/barber1.0:latest"
+                }
+               }
             }
         }
 
-        stage('TRIVY Scan') {
-            steps {
-                script {
-                    echo "Scanning Docker image barber:1.0 for vulnerabilities..."
-                    sh """
-                        trivy image --severity CRITICAL,HIGH barber:1.0
-                    """
-                }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image pragadesh007/barber1.0:latest>trivy.txt"
             }
+        }
 
-            post {
-                always {
-                    echo "Trivy image scanning completed."
-                }
+        stage("Deploy to container"){
+            steps{
+                sh 'docker run -d --name barber1.0 -p 3000:3000 pragadesh007/barber1.0:latest'
             }
         }
     }
