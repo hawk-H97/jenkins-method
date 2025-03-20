@@ -56,19 +56,19 @@ pipeline {
                 withDockerRegistry(credentialsId:'Docker',toolName: 'docker-latest'){
                     sh "docker build -t barber1.0 ."
                     sh "docker tag barber1.0 pragadesh007/barber1.0:latest"
-                    sh "dokcer push pragadesh007/barber1.0:latest"
+                    sh "docker push pragadesh007/barber1.0:latest"
                 }
                }
             }
         }
 
-        stage("TRIVY"){
+        stage("TRIVY Image Scan"){
             steps{
                 sh "trivy image pragadesh007/barber1.0:latest>trivy.txt"
             }
         }
 
-        stage("Deploy to container"){
+        stage("Deploy to docker container"){
             steps{
                 sh 'docker run -d --name barber1.0 -p 3000:3000 pragadesh007/barber1.0:latest'
             }
