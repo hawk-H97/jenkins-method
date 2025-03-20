@@ -53,7 +53,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                script{
-                withDockerRegistry(credentialsId:'docker',toolName: 'docker'){
+                withDockerRegistry(credentialsId:'Docker',toolName: 'docker-latest'){
                     sh "docker build -t barber1.0 ."
                     sh "docker tag barber1.0 pragadesh007/barber1.0:latest"
                     sh "dokcer push pragadesh007/barber1.0:latest"
