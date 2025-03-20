@@ -70,7 +70,7 @@ pipeline {
 
         stage("Deploy to docker container"){
             steps{
-                sh 'docker run -d --name barber1.0 -p 3000:8080 pragadesh007/barber1.0:latest'
+                sh 'docker run -d --name barber1.0 -p 3000:80 pragadesh007/barber1.0:latest'
             }
         }
     }
